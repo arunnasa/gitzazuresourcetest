@@ -39,7 +39,7 @@ resources:
     - repository: templates
       type: github  # use 'git' for a repo hosted in Azure DevOps
       endpoint: arunnasa
-      name: arunnasa/GitAzureTest
+      name: arunnasa/gitzazuresourcetest
 
 # Use the above specified template for your project. 
 extends:
