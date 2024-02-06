@@ -43,7 +43,15 @@
     "processOptions": {
       "ignoredFiles": []
     },
-    "fileInfoCollection": [],
+    "fileInfoCollection": [
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "35e1e2e2-e6d6-48ac-8c5d-c079932b8508",
+        "testCaseType": "TestCase",
+        "executionTemplateInvokeIsolated": false,
+        "fileName": "Azure.Devops.2023_Tests.xaml"
+      }
+    ],
     "modernBehavior": true,
     "saveToCloud": false
   },
