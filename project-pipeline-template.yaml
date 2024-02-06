@@ -60,63 +60,63 @@ stages:
 # Deploy to the Test environment on commits to any release* branch.
 # Note that this stage has no environment defined, and won't have approvals.
 # For Test environment approvals, update this to look like the Prod stage, but with using the Test environment.
-- stage: DeployToTest
-  condition: and(succeeded('Build'), startsWith(variables['Build.SourceBranchName'], 'development'))  # Only run if the packaging succeeded and we are on a development* branch.
-  jobs:
-  - job: DeployToTestJob
-    pool: 
-        vmImage: windows-latest # Update this if using dedicated build pool
-    workspace:
-      clean: all
-    steps:
-    - download: current
-      artifact: drop
-    - task: UiPathInstallPlatform@2  # This installs required exes. Not necessary if using a dedicated build machine.
-    - task: UiPathDeploy@2
-      inputs:
-        orchestratorConnection: UiPathOrchCICD
-        packagesPath: '$(Pipeline.Workspace)\drop'
-        folderName: ${{ parameters.folderName }}
-        environments: ${{ parameters.environments }}
+#- stage: DeployToTest
+#  condition: and(succeeded('Build'), startsWith(variables['Build.SourceBranchName'], 'development'))  # Only run if the packaging succeeded and we are on a development* branch.
+#  jobs:
+#  - job: DeployToTestJob
+#    pool: 
+#        vmImage: windows-latest # Update this if using dedicated build pool
+#    workspace:
+#      clean: all
+#    steps:
+#    - download: current
+#      artifact: drop
+#    - task: UiPathInstallPlatform@2  # This installs required exes. Not necessary if using a dedicated build machine.
+#   - task: UiPathDeploy@2
+#      inputs:
+#       orchestratorConnection: UiPathOrchCICD
+#        packagesPath: '$(Pipeline.Workspace)\drop'
+#        folderName: ${{ parameters.folderName }}
+#        environments: ${{ parameters.environments }}
 
-- stage: Assest
-  displayName: Create Assests
-  jobs:
-  - job: CreateAssests
-    pool: 
-        vmImage: windows-latest # Update this if using dedicated build pool
-    steps:
-      - task: UiPathAssets@2
-        inputs:
-          orchestratorConnection: UiPathOrchCICD
-          folderName: ${{ parameters.folderName }}
-          assetActionType: 'Deploy'
-          csvFile: '$(Build.SourcesDirectory)\Data\Assests.CSV'
+#- stage: Assest
+#  displayName: Create Assests
+#  jobs:
+#  - job: CreateAssests
+#    pool: 
+#        vmImage: windows-latest # Update this if using dedicated build pool
+#    steps:
+#      - task: UiPathAssets@2
+#        inputs:
+#          orchestratorConnection: UiPathOrchCICD
+#          folderName: ${{ parameters.folderName }}
+#          assetActionType: 'Deploy'
+#          csvFile: '$(Build.SourcesDirectory)\Data\Assests.CSV'
 
-- stage: Testing
-  displayName:  Test After Publish
-  dependsOn: DeployToTest
-  condition: succeeded()
-  jobs:
-  - job: TestDEV
-    pool: 
-        vmImage: windows-latest # Update this if using dedicated build pool
-    steps:
-        - task: UiPathTest@2
-          inputs:
-            testTarget: 'TestSet'
-            orchestratorConnection: UiPathOrchCICD
-            testSet: ${{ parameters.testSet }}
-            folderName: ${{ parameters.folderName }}
-            testReportDestination: '$(Pipeline.Workspace)\drop\'
+#- stage: Testing
+#  displayName:  Test After Publish
+#  dependsOn: DeployToTest
+#  condition: succeeded()
+#  jobs:
+#  - job: TestDEV
+#    pool: 
+#        vmImage: windows-latest # Update this if using dedicated build pool
+#    steps:
+#        - task: UiPathTest@2
+#          inputs:
+#            testTarget: 'TestSet'
+#            orchestratorConnection: UiPathOrchCICD
+#            testSet: ${{ parameters.testSet }}
+#            folderName: ${{ parameters.folderName }}
+#            testReportDestination: '$(Pipeline.Workspace)\drop\'
 
 
 # Deploy to the Prod environment on commits to the master branch.
 # Will require approvals as defined by the environment in Azure Devops.
 - stage: DeployToProd
-  dependsOn: DeployToTest
-  condition: and(succeeded('Build'), startsWith(variables['Build.SourceBranchName'], 'main'))
-#  condition: succeeded()
+#  dependsOn: DeployToTest
+#  condition: and(succeeded('Build'), startsWith(variables['Build.SourceBranchName'], 'main'))
+  condition: succeeded()
   jobs:
   - deployment: DeployToProdJob
     pool:  # Update this if using dedicated build pool
