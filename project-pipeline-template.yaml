@@ -115,8 +115,8 @@ stages:
 # Will require approvals as defined by the environment in Azure Devops.
 - stage: DeployToProd
 #  dependsOn: DeployToTest
-#  condition: and(succeeded('Build'), startsWith(variables['Build.SourceBranchName'], 'main'))
-  condition: succeeded()
+  condition: and(succeeded('Build'), startsWith(variables['Build.SourceBranchName'], 'main'))
+#  condition: succeeded()
   jobs:
   - deployment: DeployToProdJob
     pool:  # Update this if using dedicated build pool
